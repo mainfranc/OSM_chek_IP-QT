@@ -18,7 +18,7 @@ class MainWindow(QtWidgets.QWidget):
         self.initMap()
 
     def initUi(self):
-
+        _taranslate = QtCore.QCoreApplication.translate
         widgetLeftPanel = QtWidgets.QWidget()
         widgetRightPanel = QtWidgets.QWidget()
         splitterMain = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
@@ -37,12 +37,77 @@ class MainWindow(QtWidgets.QWidget):
         self.lineEditCheckIP.setPlaceholderText("Введите IP для проверки")
         self.pushButtonCheckIP = QtWidgets.QPushButton("Проверить")
 
+        self.lblstatus = QtWidgets.QLabel()
+        self.lblstatus.setObjectName("lblstatus")
+        self.lblstatus.setText("Status:")
+        self.lblstatus1 = QtWidgets.QLabel()
+        self.lblstatus1.setObjectName("lblstatus1")
+        self.lblstatus1.setText("")
+        self.lblcountry = QtWidgets.QLabel()
+        self.lblcountry.setObjectName("lblcountry")
+        self.lblcountry.setText("Country")
+        self.lblcountry1 = QtWidgets.QLabel()
+        self.lblcountry1.setObjectName("lblcountry1")
+        self.lblcountry1.setText("")
+        self.lblregion = QtWidgets.QLabel()
+        self.lblregion.setObjectName("lblregion")
+        self.lblregion.setText("Region:")
+        self.lblregion1 = QtWidgets.QLabel()
+        self.lblregion1.setObjectName("lblregion1")
+        self.lblregion1.setText("")
+        self.lblcity = QtWidgets.QLabel()
+        self.lblcity.setObjectName("lblcity")
+        self.lblcity.setText("City:")
+        self.lblcity1 = QtWidgets.QLabel()
+        self.lblcity1.setObjectName("lblcity1")
+        self.lblcity1.setText("")
+        self.lblzip = QtWidgets.QLabel()
+        self.lblzip.setObjectName("lblzip")
+        self.lblzip.setText("ZIP Code:")
+        self.lblzip1 = QtWidgets.QLabel()
+        self.lblzip1.setObjectName("lblzip1")
+        self.lblzip1.setText("")
+        self.lbllatelong = QtWidgets.QLabel()
+        self.lbllatelong.setObjectName("lbllatelong")
+        self.lbllatelong.setText("Coordinates:")
+        self.lbllatelong1 = QtWidgets.QLabel()
+        self.lbllatelong1.setObjectName("lbllatelong1")
+        self.lbllatelong1.setText("")
+        self.lbltz = QtWidgets.QLabel()
+        self.lbltz.setObjectName("lbltz")
+        self.lbltz.setText("Time Zone:")
+        self.lbltz1 = QtWidgets.QLabel()
+        self.lbltz1.setObjectName("lbltz1")
+        self.lbltz1.setText("")
+        self.lblorg = QtWidgets.QLabel()
+        self.lblorg.setObjectName("lblorg")
+        self.lblorg.setText("Organization:")
+        self.lblorg1 = QtWidgets.QLabel()
+        self.lblorg1.setObjectName("lblorg1")
+        self.lblorg1.setText("")
+
         layoutLeftPanel.addWidget(self.labelCoords)
         layoutLeftPanel.addWidget(self.view)
 
         layoutRightPanel.addWidget(labelCheckIP)
         layoutRightPanel.addWidget(self.lineEditCheckIP)
         layoutRightPanel.addWidget(self.pushButtonCheckIP)
+        layoutRightPanel.addWidget(self.lblstatus)
+        layoutRightPanel.addWidget(self.lblstatus1)
+        layoutRightPanel.addWidget(self.lblcountry)
+        layoutRightPanel.addWidget(self.lblcountry1)
+        layoutRightPanel.addWidget(self.lblregion)
+        layoutRightPanel.addWidget(self.lblregion1)
+        layoutRightPanel.addWidget(self.lblcity)
+        layoutRightPanel.addWidget(self.lblcity1)
+        layoutRightPanel.addWidget(self.lblzip)
+        layoutRightPanel.addWidget(self.lblzip1)
+        layoutRightPanel.addWidget(self.lbllatelong)
+        layoutRightPanel.addWidget(self.lbllatelong1)
+        layoutRightPanel.addWidget(self.lbltz)
+        layoutRightPanel.addWidget(self.lbltz1)
+        layoutRightPanel.addWidget(self.lblorg)
+        layoutRightPanel.addWidget(self.lblorg1)
         layoutRightPanel.addStretch(1)
 
         widgetLeftPanel.setLayout(layoutLeftPanel)
@@ -74,7 +139,8 @@ class MainWindow(QtWidgets.QWidget):
     def getIPInfo(self):
         def getIPValidation(ip_):
             if len(ip) != 0:
-                reg = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+                reg = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}" \
+                      "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
                 if re.match(reg, ip_) is None:
                     return False
                 return True
@@ -91,7 +157,24 @@ class MainWindow(QtWidgets.QWidget):
 
         if response.get('status') != 'success':
             QtWidgets.QMessageBox.about(self, "Уведомление", "Информация по IP - адресу не найдена")
+            self.lblstatus1.setText("")
+            self.lblcountry1.setText("")
+            self.lblregion1.setText("")
+            self.lblcity1.setText("")
+            self.lblzip1.setText("")
+            self.lbllatelong1.setText("")
+            self.lbltz1.setText("")
+            self.lblorg1.setText("")
             return
+
+        self.lblstatus1.setText(response.get('status'))
+        self.lblcountry1.setText(response.get('country'))
+        self.lblregion1.setText(response.get('regionName'))
+        self.lblcity1.setText(response.get('city'))
+        self.lblzip1.setText(response.get('zip'))
+        self.lbllatelong1.setText(str(response.get('lat'))+":"+str(response.get('lon')))
+        self.lbltz1.setText(response.get('timezone'))
+        self.lblorg1.setText(response.get('org'))
 
         page = self.view.page()
 
